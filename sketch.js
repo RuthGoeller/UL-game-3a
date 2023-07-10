@@ -16,6 +16,7 @@ var isLeft;
 var isRight;
 var isFalling;
 var isPlummeting;
+var collectable;
 
 
 function setup()
@@ -30,6 +31,13 @@ function setup()
 	isFalling = false;
 	isPlummeting = false;
 
+	collectable = {
+		x_pos: 100,
+		y_pos: floorPos_y,
+		size: 40,
+		isFound: false
+	};
+
 }
 
 function draw()
@@ -43,6 +51,26 @@ function draw()
 	noStroke();
 	fill(0,155,0);
 	rect(0, floorPos_y, width, height - floorPos_y); //draw some green ground
+
+
+	// Draw collectable item
+	if(dist(gameChar_x, gameChar_y, collectable.x_pos, collectable.y_pos) < 20)
+	{
+		collectable.isFound = true;
+	}
+	if(collectable.isFound == false)
+	{
+	noFill();
+	stroke(255, 0, 0);
+	strokeWeight(3);
+	ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size, collectable.size);
+	stroke(255, 255, 0);
+	strokeWeight(3);
+	line(collectable.x_pos-10, collectable.y_pos-20, collectable.x_pos+10, collectable.y_pos-20);
+	line(collectable.x_pos, collectable.y_pos-30, collectable.x_pos, collectable.y_pos-10);
+
+}
+
 
 	//draw the canyon
 
