@@ -8,7 +8,13 @@ Game interaction
 
 */
 
-
+/*
+	- Write a conditional statement within `draw` to detect when the character is over the canyon. 
+		- HINT: use gameChar_x and the > and < operators
+	- When the condition is met, set `isPlummeting` to `true`.
+	- Write another conditional statement within `draw` which detects when `isPlummeting` is `true`
+	- When this condition is met, increment `gameChar_y` so that the game character falls more quickly
+	*/
 var gameChar_x;
 var gameChar_y;
 var floorPos_y;
@@ -17,6 +23,7 @@ var isRight;
 var isFalling;
 var isPlummeting;
 var collectable;
+var canyon;
 
 
 function setup()
@@ -38,6 +45,10 @@ function setup()
 		isFound: false
 	};
 
+	canyon = {
+		x_pos: 0,
+		width: 100
+	};
 }
 
 function draw()
@@ -73,8 +84,13 @@ function draw()
 
 
 	//draw the canyon
+	stroke(102, 51, 0);
+	fill(102, 51, 0);
+	rect(canyon.x_pos, floorPos_y, canyon.width, height - floorPos_y);
 
 
+
+	stroke(0);
 	//the game character
 	if(isLeft && isFalling)
 	{
