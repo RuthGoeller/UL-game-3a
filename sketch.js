@@ -163,6 +163,16 @@ function draw()
 	{
 		gameChar_x += 5;
 	}
+
+	//gravity
+	if(gameChar_y < floorPos_y)
+	{
+		gameChar_y += 2;
+		isFalling = true;	
+}else{
+	isFalling = false;
+
+}
 }
 
 
@@ -177,7 +187,10 @@ function keyPressed()
 	} else if(keyCode == 39)
 	{
 		isRight = true;
-	} 
+	} else if (keyCode == 87){
+		gameChar_y -= 100;
+	}
+
 	//open up the console to see how these work
 	console.log("keyPressed: " + key);
 	console.log("keyPressed: " + keyCode);
