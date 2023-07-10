@@ -9,21 +9,10 @@ Game interaction
 */
 
 /*
-	- Write a conditional statement within `draw` to detect when the character is over the canyon. 
-		- HINT: use gameChar_x and the > and < operators
-	- When the condition is met, set `isPlummeting` to `true`.
-	- Write another conditional statement within `draw` which detects when `isPlummeting` is `true`
-	- When this condition is met, increment `gameChar_y` so that the game character falls more quickly
-	- We also want our game character to be able to jump over the canyon
-	- Adjust the conditional statement which detects whether the game character is over the canyon so that it also requires the game character to be on the ground.
-		HINT: use `gameChar_y` and the `>=` operator
-	- Test that your character is able to jump over the canyon as well as fall down it
+ In `setup`, declare and initialise a `clouds` variable with an array containing some cloud objects (e.g. at least 3).         
 
-8. Freezing controls [2 marks]
-	- Once our game charcater falls down a canyon there should be no escape for them
-	- In keyPressed modify your conditional statements so that the character can no longer be moved once `isPlummeting` is true.
-	- Test that your character can jump over the canyon and fall down it, but can't jump out of it.
-	*/
+HINT: you can copy the one from part 2b but vary the x and y positions of each object.*/
+
 var gameChar_x;
 var gameChar_y;
 var floorPos_y;
@@ -33,6 +22,12 @@ var isFalling;
 var isPlummeting;
 var collectable;
 var canyon;
+var trees_x;
+var clouds;
+var mountains;
+
+
+
 
 
 function setup()
@@ -54,6 +49,11 @@ function setup()
 		isFound: false
 	};
 
+	trees_x = [100, 300, 500, 700, 900];
+
+	clouds = [ {x_pos: 100, y_pos: 100}, {x_pos: 300, y_pos: 100}, {x_pos: 500, y_pos: 100} ]; 
+
+	mountains = [ {x_pos: 100, y_pos: 100}, {x_pos: 300, y_pos: 100}, {x_pos: 500, y_pos: 100} ];
 	canyon = {
 		x_pos: 0,
 		width: 100
@@ -91,6 +91,28 @@ function draw()
 
 }
 
+	// Draw clouds.
+	for(var i = 0; i < clouds.length; i++)
+	{
+		stroke(255);
+		fill(255);
+		ellipse(clouds[i].x_pos, clouds[i].y_pos, 100, 100);
+		ellipse(clouds[i].x_pos + 50, clouds[i].y_pos, 100, 100);
+		ellipse(clouds[i].x_pos + 25, clouds[i].y_pos - 25, 100, 100);
+		ellipse(clouds[i].x_pos + 25, clouds[i].y_pos + 25, 100, 100);
+		ellipse(clouds[i].x_pos - 25, clouds[i].y_pos + 25, 100, 100);
+		ellipse(clouds[i].x_pos - 25, clouds[i].y_pos - 25, 100, 100);
+	}
+
+// Draw mountains.
+for(var i = 0; i < mountains.length; i++)
+{
+	stroke(196, 164, 132)
+	fill(196, 164, 132);
+	triangle(mountains[i].x_pos, floorPos_y, mountains[i].x_pos + 100, floorPos_y - 200, mountains[i].x_pos + 200, floorPos_y);
+	triangle(mountains[i].x_pos + 200, floorPos_y, mountains[i].x_pos + 300, floorPos_y - 200, mountains[i].x_pos + 400, floorPos_y);
+}
+
 
 	//draw the canyon
 	stroke(102, 51, 0);
@@ -107,6 +129,17 @@ if(isPlummeting == true)
 	gameChar_y += 5;
 }
 
+
+	//draw the trees
+	for(var i = 0; i < trees_x.length; i++)
+	{
+		fill(0, 155, 0);
+		ellipse(trees_x[i], floorPos_y - 50, 50, 100);
+		fill(255, 0, 0);
+		ellipse(trees_x[i], floorPos_y - 100, 100, 100);
+
+
+	}
 
 
 	stroke(0);
