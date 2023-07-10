@@ -14,6 +14,15 @@ Game interaction
 	- When the condition is met, set `isPlummeting` to `true`.
 	- Write another conditional statement within `draw` which detects when `isPlummeting` is `true`
 	- When this condition is met, increment `gameChar_y` so that the game character falls more quickly
+	- We also want our game character to be able to jump over the canyon
+	- Adjust the conditional statement which detects whether the game character is over the canyon so that it also requires the game character to be on the ground.
+		HINT: use `gameChar_y` and the `>=` operator
+	- Test that your character is able to jump over the canyon as well as fall down it
+
+8. Freezing controls [2 marks]
+	- Once our game charcater falls down a canyon there should be no escape for them
+	- In keyPressed modify your conditional statements so that the character can no longer be moved once `isPlummeting` is true.
+	- Test that your character can jump over the canyon and fall down it, but can't jump out of it.
 	*/
 var gameChar_x;
 var gameChar_y;
@@ -86,7 +95,17 @@ function draw()
 	//draw the canyon
 	stroke(102, 51, 0);
 	fill(102, 51, 0);
-	rect(canyon.x_pos, floorPos_y, canyon.width, height - floorPos_y);
+	rect(canyon.x_pos+200, floorPos_y, canyon.width, height - floorPos_y);
+
+if(gameChar_x > canyon.x_pos+200 && gameChar_x < canyon.x_pos+200+canyon.width && gameChar_y >= floorPos_y)
+{
+	isPlummeting = true;
+}
+
+if(isPlummeting == true)
+{
+	gameChar_y += 5;
+}
 
 
 
