@@ -1,12 +1,3 @@
-/*
-
-The Game Project
-
-Week 3
-
-Game interaction
-
-*/
 
 var cameraPosX = 0;
 var gameChar_x;
@@ -21,47 +12,85 @@ var canyon;
 var trees_x;
 var clouds;
 var mountains;
+var game_score = 0;
+var flagpole = {
+	x_pos: 900,
+	isReached: false
+};
+var lives = 3;
 
+
+
+// Initialize the game
 function setup() {
 	createCanvas(1024, 576);
 	floorPos_y = height * 3/4;
 	gameChar_x = width/2;
 	gameChar_y = floorPos_y;
-
 	isLeft = false;
 	isRight = false;
 	isFalling = false;
 	isPlummeting = false;
+	initCollectable();
+	initEnvironment();
+}
 
-	collectable = {
-		x_pos: 70,
-		y_pos: floorPos_y,
-		size: 40,
-		isFound: false
-	};
 
+
+function draw() {
+	background(100, 155, 255);
+	drawBackground();
+	drawCollectable();
+	drawClouds();
+	drawMountains();
+	drawCanyon();
+	drawTrees();
+	drawCharacter();
+	
+	drawGameInfo();
+}
+
+
+// Initialize the collectable
+function initCollectable() {
+	collectable = [
+		{x_pos: 100, y_pos: floorPos_y, size: 40, isFound: false},
+		{x_pos: 700, y_pos: floorPos_y, size: 40, isFound: false}
+	];
+	
+}
+
+// Initialize the environment
+function initEnvironment() {
 	trees_x =[ 150, 350, 550, 750, 950];
-
 	clouds = [
 		{x_pos: 100, y_pos: 100},
 		{x_pos: 300, y_pos: 100},
 		{x_pos: 500, y_pos: 100}
 	];
-
 	mountains = [
 		{x_pos: 100, y_pos: 100},
 		{x_pos: 300, y_pos: 100},
 		{x_pos: 500, y_pos: 100}
 	];
+	canyon = 
+	[
+		{x_pos: 200, width: 100},
+		{x_pos: 700, width: 100},
+		
 
-	canyon = {
-		x_pos: 0,
-		width: 100
-	};
+	];
+	
 }
 
+// Draw the game background
+function drawBackground() {
+	noStroke();
+	fill(0, 155, 0);
+	rect(0, floorPos_y, width, height - floorPos_y);
+}
 function draw() {
-	///////////DRAWING CODE//////////
+	///////////DRAWING CODE/////////
 
 	background(100, 155, 255); //fill the sky blue
 
@@ -73,26 +102,9 @@ function draw() {
 	push();
 	translate(-cameraPosX, 0);
 
-	// Draw collectable item
-	if (dist(gameChar_x, gameChar_y, collectable.x_pos, collectable.y_pos) < 20) {
-		collectable.isFound = true;
-	}
 
-	if (collectable.isFound == false) {
 
-		fill(255, 0, 0);
-		ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size, collectable.size);
-		fill(255, 255, 0);
-		ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size - 10, collectable.size - 10);
-		fill(255, 0, 0);
-		ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size - 20, collectable.size - 20);
-		fill(255, 255, 0);
-		ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size - 30, collectable.size - 30);
-		fill(255, 0, 0);
-		ellipse(collectable.x_pos, collectable.y_pos-20, collectable.size - 40, collectable.size - 40);
-		
-	}
-
+	
 	// Draw clouds
 	for (var i = 0; i < clouds.length; i++) {
 		stroke(255);
@@ -114,17 +126,45 @@ function draw() {
 	}
 
 	//Draw the canyon
-	stroke(102, 51, 0);
-	fill(102, 51, 0);
-	rect(canyon.x_pos + 200, floorPos_y, canyon.width, height - floorPos_y);
 
-	if (gameChar_x > canyon.x_pos + 200 && gameChar_x < canyon.x_pos + 200 + canyon.width && gameChar_y >= floorPos_y) {
-		isPlummeting = true;
+	for(var i = 0; i < canyon.length; i++){
+		fill(102, 51, 0);
+		rect(canyon[i].x_pos, floorPos_y, canyon[i].width, height - floorPos_y);
+
+		if(gameChar_x > canyon[i].x_pos && gameChar_x < canyon[i].x_pos + canyon[i].width && gameChar_y >= floorPos_y){
+			isPlummeting = true;
+		}
+
+		if(isPlummeting == true){
+			gameChar_y += 5;
+		}
+
 	}
 
-	if (isPlummeting == true) {
-		gameChar_y += 5;
+		// Draw collectable item
+for(var i = 0; i < collectable.length; i++){
+
+	if (!collectable[i].isFound && dist(gameChar_x, gameChar_y, collectable[i].x_pos, collectable[i].y_pos) < 20) {
+		collectable[i].isFound = true;
+		game_score += 1;
 	}
+	
+	if(collectable[i].isFound == false){
+		fill(255, 0, 0);
+			ellipse(collectable[i].x_pos, collectable[i].y_pos-20, collectable[i].size, collectable[i].size);
+			fill(255, 255, 0);
+			ellipse(collectable[i].x_pos, collectable[i].y_pos-20, collectable[i].size - 10, collectable[i].size - 10);
+			fill(255, 0, 0);
+			ellipse(collectable[i].x_pos, collectable[i].y_pos-20, collectable[i].size - 20, collectable[i].size - 20);
+			fill(255, 255, 0);
+			ellipse(collectable[i].x_pos, collectable[i].y_pos-20, collectable[i].size - 30, collectable[i].size - 30);
+			fill(255, 0, 0);
+			ellipse(collectable[i].x_pos, collectable[i].y_pos-20, collectable[i].size - 40, collectable[i].size - 40);
+	}
+}
+
+
+	checkFlagpole();
 
 	//Draw the trees
 	for (var i = 0; i < trees_x.length; i++) {
@@ -235,9 +275,12 @@ function draw() {
 		rect(gameChar_x - 15, gameChar_y - 5, 30, 5);
 	}
 
+	renderFlagpole();
 	pop(); 
 
-	///////////INTERACTION CODE//////////
+	fill(255);
+	noStroke();
+	text("Score: " + game_score, 20, 20);
 	//Put conditional statements to move the game character below here
 
 	if (isLeft) {
@@ -249,13 +292,14 @@ function draw() {
 
 	cameraPosX = gameChar_x - width / 2;
 
-	//gravity
+	//gravityasaaa
 	if (gameChar_y < floorPos_y) {
 		gameChar_y += 2;
 		isFalling = true;
 	} else {
 		isFalling = false;
 	}
+
 }
 
 function keyPressed() {
@@ -269,10 +313,6 @@ function keyPressed() {
 	} else if (keyCode == 87) {
 		gameChar_y -= 100;
 	}
-
-	//open up the console to see how these work
-	console.log("keyPressed: " + key);
-	console.log("keyPressed: " + keyCode);
 }
 
 function keyReleased() {
@@ -284,6 +324,36 @@ function keyReleased() {
 	} else if (keyCode == 68) {
 		isRight = false;
 	}
-	console.log("keyReleased: " + key);
-	console.log("keyReleased: " + keyCode);
 }
+
+
+function renderFlagpole() {
+	push();
+	strokeWeight(5);
+	stroke(180);
+    line(flagpole.x_pos, floorPos_y, flagpole.x_pos, floorPos_y - 250)
+	fill(255, 0, 255);
+	noStroke();
+
+
+    if (flagpole.isReached) {
+        // Draw flagpole when it's reached
+		rect(flagpole.x_pos, floorPos_y - 250, 50, 50);
+    } else {
+        // Draw flagpole when it's not reached
+        rect(flagpole.x_pos, floorPos_y - 50, 50, 50);
+    }
+}
+
+function checkFlagpole() {
+
+	var d = abs(gameChar_x - flagpole.x_pos);
+
+	console.log(d);
+
+   if(d < 15) {
+	   flagpole.isReached = true;
+   }
+}
+
+
