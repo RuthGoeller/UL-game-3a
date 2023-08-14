@@ -17,7 +17,7 @@ var flagpole = {
 	x_pos: 900,
 	isReached: false
 };
-var lives = 3;
+var lives;
 
 
 
@@ -25,29 +25,9 @@ var lives = 3;
 function setup() {
 	createCanvas(1024, 576);
 	floorPos_y = height * 3/4;
-	gameChar_x = width/2;
-	gameChar_y = floorPos_y;
-	isLeft = false;
-	isRight = false;
-	isFalling = false;
-	isPlummeting = false;
-	initCollectable();
-	initEnvironment();
-}
-
-
-
-function draw() {
-	background(100, 155, 255);
-	drawBackground();
-	drawCollectable();
-	drawClouds();
-	drawMountains();
-	drawCanyon();
-	drawTrees();
-	drawCharacter();
+	lives = 3; // Reset the lives
+	startGame(); 
 	
-	drawGameInfo();
 }
 
 
@@ -64,9 +44,9 @@ function initCollectable() {
 function initEnvironment() {
 	trees_x =[ 150, 350, 550, 750, 950];
 	clouds = [
-		{x_pos: 100, y_pos: 100},
 		{x_pos: 300, y_pos: 100},
-		{x_pos: 500, y_pos: 100}
+		{x_pos: 500, y_pos: 100},
+		{x_pos: 700, y_pos: 100}
 	];
 	mountains = [
 		{x_pos: 100, y_pos: 100},
@@ -90,8 +70,7 @@ function drawBackground() {
 	rect(0, floorPos_y, width, height - floorPos_y);
 }
 function draw() {
-	///////////DRAWING CODE/////////
-
+	checkPlayerDie()
 	background(100, 155, 255); //fill the sky blue
 
 	noStroke();
@@ -102,8 +81,13 @@ function draw() {
 	push();
 	translate(-cameraPosX, 0);
 
-
-
+//draw life tokens
+	for (var i = 0; i < lives; i++) {
+        fill(255, 0, 0);
+        ellipse(30 + i * 30, 40, 20, 20); // Adjust the positions and sizes as needed
+   
+	}
+	
 	
 	// Draw clouds
 	for (var i = 0; i < clouds.length; i++) {
@@ -275,6 +259,22 @@ for(var i = 0; i < collectable.length; i++){
 		rect(gameChar_x - 15, gameChar_y - 5, 30, 5);
 	}
 
+
+	if (lives < 1) {
+        fill(255);
+        textSize(20);
+        text("Game over. Press space to continue.", width / 2, height / 2);
+        return; 
+    }
+
+    // Check for level complete
+    if (flagpole.isReached) {
+        fill(255);
+        textSize(20);
+        text("Level complete. Press space to continue.", width / 2, height / 2);
+        return; 
+    }
+
 	renderFlagpole();
 	pop(); 
 
@@ -356,4 +356,34 @@ function checkFlagpole() {
    }
 }
 
+
+
+function checkPlayerDie() {
+
+
+
+	if(gameChar_y > height){
+		lives -= 1;
+
+		if(lives > 0){
+			startGame();
+		}
+	}
+
+
+
+}
+
+// Start the game
+function startGame() {
+	gameChar_x = width / 2;
+	gameChar_y = floorPos_y;
+	isLeft = false;
+	isRight = false;
+	isFalling = false;
+	isPlummeting = false;
+	initCollectable();
+	initEnvironment();
+	
+}
 
